@@ -1,0 +1,10 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 120,
+  "prettier.printWidth": 120,
+  "prettier.semi": false,
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
+}

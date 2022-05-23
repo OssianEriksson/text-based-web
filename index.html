@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      async function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms))
+      }
+
+      addEventListener("DOMContentLoaded", (event) => {
+        let toPush = ""
+        let pushing = false
+        const stdout = document.getElementById("stdout")
+        const setData = (data) => {
+          stdout.innerText = data.stdout
+          scrollTo(0, document.body.scrollHeight)
+          toPush = ""
+        }
+        const pushData = async (data) => {
+          toPush += data.stdout
+          if (!pushing) {
+            pushing = true
+            while (toPush.length > 0) {
+              stdout.innerText += toPush[0]
+              scrollTo(0, document.body.scrollHeight)
+              toPush = toPush.slice(1)
+              if (data.letterDelay > 0) {
+                await sleep(data.letterDelay)
+              }
+            }
+            pushing = false
+          }
+        }
+
+        fetch("/get")
+          .then((response) => response.json())
+          .then(setData)
+        const socket = io()
+        socket.on("set", setData)
+        socket.on("push", pushData)
+      })
+    </script>
+  </head>
+  <body style="background-color: black; color: white">
+    <pre id="stdout" style="word-wrap: break-word; white-space: pre-wrap"></pre>
+  </body>
+</html>
