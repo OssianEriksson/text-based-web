@@ -13,7 +13,7 @@
         let pushing = false
         const stdout = document.getElementById("stdout")
         const setData = (data) => {
-          stdout.innerText = data.stdout
+          stdout.textContent = data.stdout
           scrollTo(0, document.body.scrollHeight)
           toPush = ""
         }
@@ -21,12 +21,16 @@
           toPush += data.stdout
           if (!pushing) {
             pushing = true
+            let time = Date.now()
             while (toPush.length > 0) {
-              stdout.innerText += toPush[0]
+              stdout.textContent += toPush[0]
               scrollTo(0, document.body.scrollHeight)
               toPush = toPush.slice(1)
-              if (data.letterDelay > 0) {
-                await sleep(data.letterDelay)
+
+              time += data.letterDelay
+              const dt = time - Date.now()
+              if (dt > 0) {
+                await sleep(dt)
               }
             }
             pushing = false
